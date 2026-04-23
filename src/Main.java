@@ -1,16 +1,16 @@
+import CustomException.MaxAccount;
+import CustomException.ThisUserAlredyExists;
+import CustomException.UserNotFoundException;
 import model.Account;
 import model.User;
-import service.AccountService;
-import service.AccountServiceImpl;
-import service.UserService;
-import service.UserServiceImpl;
+import service.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ThisUserAlredyExists, UserNotFoundException, MaxAccount {
         System.out.println("Шаблон домашнего задания по банковской системе.");
         System.out.println("Сейчас в ветке main оставлены модели и интерфейсы, а реализации сервисов студент пишет сам.");
 
-        User demoUser = new User(1, "Ivan", 3);
+        User demoUser = new User(1,"Ivan",3);
         Account demoAccount = new Account("ACC-1001", "RUB", 10);
         demoUser.addAccount(demoAccount);
 
