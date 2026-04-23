@@ -1,5 +1,7 @@
 package service;
 
+import CustomException.MaxAccount;
+import CustomException.UserNotFoundException;
 import model.Account;
 import model.OperationRecord;
 import model.OperationType;
@@ -9,14 +11,14 @@ import model.User;
 
 public class AccountServiceImpl implements AccountService {
     @Override
-    public Account createAccount (User user, String accountNumber,String currency, int historyCapacity) {
+    public Account createAccount (User user, String accountNumber,String currency, int historyCapacity) throws MaxAccount, UserNotFoundException {
         if(user == null){
-            throw new IllegalArgumentException("Такой пользователь не может существовать");
+            throw new UserNotFoundException("Такой пользователь не может существовать");
         }
         Account account = new Account(accountNumber,currency,historyCapacity);
         boolean added = user.addAccount(account);
         if(!added){
-            throw new IllegalStateException("Пользователь достиг максомального кол-ва учетных записей");
+            throw new MaxAccount("Пользователь достиг максомального кол-ва учетных записей");
         }
         return account;
     }
@@ -31,6 +33,7 @@ public class AccountServiceImpl implements AccountService {
         account.addHistoryRecord(record);
         return true;
     }
+    @Override
     public boolean withdraw(Account account, double amount) {
         if (account == null || amount < 0|| amount > account.getBalance()||account.getBalance()<0) {
             return false;
@@ -40,7 +43,7 @@ public class AccountServiceImpl implements AccountService {
         account.addHistoryRecord(record);
         return true;
     }
-
+    @Override
     public boolean transfer(Account fromAccount, Account toAccount, double amount) {
         if(amount < 0|| amount > fromAccount.getBalance()){
             return false;
@@ -70,3 +73,5 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 }
+
+

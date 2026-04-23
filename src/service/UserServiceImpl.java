@@ -1,5 +1,6 @@
 package service;
 
+import CustomException.ThisUserAlredyExists;
 import model.Account;
 import model.User;
 
@@ -10,10 +11,10 @@ public class UserServiceImpl implements UserService{
     private List<User> users = new ArrayList<User>();
 
     @Override
-    public User createUser(int id,String name, int maxAccounts){
+    public User createUser(int id,String name, int maxAccounts) throws ThisUserAlredyExists {
         for(User user : users){
             if(user.getId() == id){
-                throw new IllegalArgumentException("Пользователь с таким ID уже существует");
+                throw new ThisUserAlredyExists("Пользователь с таким ID уже существует");
             }
         }
         User user = new User(id,name,maxAccounts);
@@ -27,9 +28,10 @@ public class UserServiceImpl implements UserService{
             return;
         }
         for (Account account : user.getAccounts()) {
-            System.out.println("Аккаунт: "+ account.getAccountNumber()+
-                    ", валюта: "+account.getCurrency()+
-                    ", баланс: "+account.getBalance());
+            System.out.println(String.format("Аккаунт: %s, валюта: %s, баланс: %.2f",
+                    account.getAccountNumber(),
+                    account.getCurrency(),
+                    account.getBalance()));
         }
     }
 }
